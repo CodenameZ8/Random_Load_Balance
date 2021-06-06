@@ -1,0 +1,22 @@
+After researching for the best algorithm to be used to simulate load balancer finally chose to go with random as the implementation is simple and effective and does not take up a lot of resources and no need to keep track of servers in the pool or how many connected, and it simply distributes evenly to all available servers.
+
+The written code directly uses the list of available servers. In actual scenario these are to check for the server to see if it's alive with timed heartbeats if no reply consider it as down and redirect to other servers which are available.
+
+Ideally speaking a random server without weights where all the servers are of the same resource and config the load balancer is extremely fast and redirects the traffic evenly and if any server is down distributes evenly to the remaining server.
+
+Suppose the servers process at different rates the weight random server algorithm can be used as coded in the java program.
+
+There are various other algorithm which could be chosen depending on the system requirement
+At least connection if request is connected to the server and not closed yet.
+Least response time to connect the server with quick response as priority useful if spread out geographically, hashing based to again evenly distribute based on hash value,
+As mentioned all the algorithms are resource heavy, degrades efficiency of load balancer.
+
+Finally the random weighted algorithm with a hybrid of the above mentioned algorithm might be best to use as various additional data is required such as the number of requests the available server, their configurations latency among the server etc.
+
+Finally the task of failure of all servers was the hardest part figure out,
+Ideally speaking the load balancer task is only to route the traffic if all servers the complete system fails.
+One way is if we consider the load balancer to handle this situation we could set up a prioritised fail safe server which is only used in case all servers are down, this might not be feasible as all other req.  Floods into the server and could easily disrupt.
+Have a system which takes in requests and again forwards it back to load balancer, in this situation the message could be going to and fro till servers come back up.
+Finally fail gracefully send the request back saying it could not be handled and all servers are down.
+
+Thus for the code 1 situation is used where if all servers are failed its handled by a backup server.
